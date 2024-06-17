@@ -12,7 +12,9 @@ import session from 'express-session'; // Import express-session
 import { Verifyjsonwebtoken } from './jsonwebtoken.js';
 import chatRouter from './routes/chatRoutes.js';
 import { server, app } from './socket.js';
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 app.use(express.json());
 app.use(cors());
@@ -63,7 +65,7 @@ app.get('/login',(req,res)=>{
   res.redirect('http://localhost:5173/signin');
 });
 
-
-server.listen(3000,(req,res)=>{
+const PORT = process.env.PORT || 3000;
+server.listen(PORT,(req,res)=>{
   console.log('server running in 3000 port')
 });
