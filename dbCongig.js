@@ -4,10 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const dbUrl = process.env.DB_URL;
-mongoose.connect(`${dbUrl}`,{
-  useNewUrlParser: true,   
-  useUnifiedTopology: true
-});
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 
