@@ -7,7 +7,7 @@ const dbUrl = process.env.DB_URL;
 mongoose.connect(`${dbUrl}`,{
   useNewUrlParser: true,   
   useUnifiedTopology: true, 
-  useCreateIndex: true,     
+  createIndexes: true   
 });
 
 const db = mongoose.connection;
