@@ -52,9 +52,6 @@ app.get('/',(req,res)=>{
 
   res.send('welcome to engineer Link');
 })
-app.get('/home',(req,res)=>{
-  res.redirect('http://localhost:5173/profile');
-})
 
 app.get('/istokenvaid',Verifyjsonwebtoken, async(req,res)=>{
   res.send({user:req.user,error:false});
