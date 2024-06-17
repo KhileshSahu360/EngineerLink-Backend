@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(passport.initialize());
 
 
-
+const frontend_url = process.env.FRONTEND_URL;
 
 passport.use(new GoogleStrategy({
   clientID: process.env.CLIENT_ID,
@@ -59,7 +59,7 @@ googleRouter.get('/google/callback', passport.authenticate('google', { failureRe
         const token = Generatejsonwebtoken(payLoad);
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + 30);
-        res.cookie('token',token,{expires:expiryDate})
+        res.cookie('token',token,{expires:expiryDate, httpOnly:false, secure:true, sameSite:'none'})
       } else {
         console.log(error)
         return res.redirect('http://localhost:5173/servererror');
@@ -67,7 +67,7 @@ googleRouter.get('/google/callback', passport.authenticate('google', { failureRe
     
     } catch (error) {
       console.log(error)
-      return res.redirect('http://localhost:5173/servererror');
+      return res.redirect(`${frontend_url}servererror`);
     }
     
     res.redirect('/home');

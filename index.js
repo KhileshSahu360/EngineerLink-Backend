@@ -16,6 +16,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const frontend_url = process.env.FRONTEND_URL;
+
 app.use(express.json());
 app.use(cors());
 
@@ -58,11 +60,11 @@ app.get('/istokenvaid',Verifyjsonwebtoken, async(req,res)=>{
   res.send({user:req.user,error:false});
 })
 app.get('/home',(req,res)=>{
-  res.redirect('http://localhost:5173/');
+  res.redirect(`${frontend_url}`);
 })
 
 app.get('/login',(req,res)=>{
-  res.redirect('http://localhost:5173/signin');
+  res.redirect(`${frontend_url}signin`);
 });
 
 const PORT = process.env.PORT || 3000;
