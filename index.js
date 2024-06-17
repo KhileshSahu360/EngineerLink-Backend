@@ -21,7 +21,7 @@ const cors_frontend_url = process.env.FRONTEND_URL_CORS;
 
 app.use(express.json());
 app.use(cors({
-  origin : cors_frontend_url,
+  origin : '*',
   credentials : true
 }));
 

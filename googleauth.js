@@ -13,7 +13,7 @@ const cors_frontend_url = process.env.FRONTEND_URL_CORS;
 
 const app = express();
 app.use(cors({
-  origin : cors_frontend_url,
+  origin : '*',
   credentials : true 
 }));
 app.use(express.json());
