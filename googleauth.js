@@ -8,15 +8,20 @@ import { Generatejsonwebtoken } from './jsonwebtoken.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
+const frontend_url = process.env.FRONTEND_URL;
+const cors_frontend_url = process.env.FRONTEND_URL_CORS;
+
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin : cors_frontend_url,
+  credentials : true 
+}));
 app.use(express.json());
 
 
 app.use(passport.initialize());
 
 
-const frontend_url = process.env.FRONTEND_URL;
 
 passport.use(new GoogleStrategy({
   clientID: process.env.CLIENT_ID,
@@ -59,7 +64,7 @@ googleRouter.get('/google/callback', passport.authenticate('google', { failureRe
         const token = Generatejsonwebtoken(payLoad);
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + 30);
-        res.cookie('token',token,{expires:expiryDate, httpOnly:false, secure:true, sameSite:'none'})
+        res.cookie('token',token,{expires:expiryDate, httpOnly:false, secure:true, sameSite:'None'})
       } else {
         console.log(error)
         return res.redirect('http://localhost:5173/servererror');

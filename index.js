@@ -17,15 +17,19 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const frontend_url = process.env.FRONTEND_URL;
+const cors_frontend_url = process.env.FRONTEND_URL_CORS;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin : cors_frontend_url,
+  credentials : true
+}));
 
 app.use(session({
   secret : 'Eng@1234',
   resave: false,
   saveUninitialized: true,
-  cookie : {secure:false}
+  cookie : {secure:true}
 }))
 
 app.use(passport.initialize());
@@ -44,10 +48,11 @@ app.use('/post',postRouter);
 app.use('/chat',chatRouter);
 app.get('/',(req,res)=>{
   res.cookie('myCookie', 'exampleValue', {
-    path: '/',
-    domain: 'localhost',
-    secure: false, // Only send the cookie over HTTPS
-    httpOnly: false // Prevent access from client-side JavaScript
+    // path: '/',
+    // domain: 'localhost',
+    secure: true, // Only send the cookie over HTTPS
+    httpOnly: false,
+    sameSite:'None' // Prevent access from client-side JavaScript
   });
 
   res.send('welcome to engineer Link');
