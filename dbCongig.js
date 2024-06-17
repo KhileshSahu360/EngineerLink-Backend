@@ -4,11 +4,14 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const dbUrl = process.env.DB_URL;
-mongoose.connect(dbUrl);
+mongoose.connect(dbUrl,{
+  useNewUrlParser : true,
+  useUnifiedTopology : true
+});
 
 const db = mongoose.connection;
 
 db.on('connected', ()=>console.log('connrcted to the mongodb:'));
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.on('error', () => console.log('MongoDB connection error:'));
 db.once('open', () => {
 });
