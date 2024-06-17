@@ -4,7 +4,7 @@ import signupRouter from './routes/signupRoutes.js';
 import signinRouter from './routes/signinRoutes.js';
 import resetPaswordRouter from './routes/resetPassword.js';
 import verifyEmailRouter from './routes/verifyEmail.js';
-// import googleRouter from './googleauth.js';
+import googleRouter from './googleauth.js';
 import postRouter from './routes/postRoutes.js';
 import passport from 'passport';
 import cors from 'cors';
@@ -35,7 +35,7 @@ app.use('/user',userRouter);
 app.use('/signup',signupRouter);
 app.use('/tokenauth/',verifyEmailRouter);
 app.use('/resetpassword',resetPaswordRouter);
-// app.use('/auth',googleRouter);
+app.use('/auth',googleRouter);
 app.use('/post',postRouter);
 app.use('/chat',chatRouter);
 app.get('/',(req,res)=>{
