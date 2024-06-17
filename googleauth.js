@@ -64,7 +64,7 @@ googleRouter.get('/google/callback', passport.authenticate('google', { failureRe
         const token = Generatejsonwebtoken(payLoad);
         const expiryDate = new Date();
         expiryDate.setDate(expiryDate.getDate() + 30);
-        res.cookie('token',token,{expires:expiryDate, httpOnly:false, secure:true, sameSite:'None'})
+        res.cookie('token',token,{expires:expiryDate, httpOnly:true, secure:true, sameSite:'None'})
       } else {
         console.log(error)
         return res.redirect('http://localhost:5173/servererror');
