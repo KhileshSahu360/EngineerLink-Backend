@@ -61,10 +61,12 @@ googleRouter.get('/google/callback', passport.authenticate('google', { failureRe
         expiryDate.setDate(expiryDate.getDate() + 30);
         res.cookie('token',token,{expires:expiryDate, httpOnly:false})
       } else {
+        console.log(error)
         return res.redirect('http://localhost:5173/servererror');
       }
     
     } catch (error) {
+      console.log(error)
       return res.redirect('http://localhost:5173/servererror');
     }
     
