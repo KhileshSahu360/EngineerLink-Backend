@@ -29,7 +29,7 @@ app.use(session({
   secret : 'Eng@1234',
   resave: false,
   saveUninitialized: true,
-  cookie : {secure:true}
+  cookie : {secure:true, sameSite:'Strict'}
 }))
 
 app.use(passport.initialize());

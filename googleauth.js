@@ -6,6 +6,7 @@ import User from './Model/userModel.js'
 import bcrypt from 'bcrypt';
 import { Generatejsonwebtoken } from './jsonwebtoken.js';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser'
 
 dotenv.config();
 const frontend_url = process.env.FRONTEND_URL;
@@ -17,7 +18,15 @@ app.use(cors({
   credentials : true 
 }));
 app.use(express.json());
+app.use(cookieParser());
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', `${frontend_url}`); // Adjust as needed for development
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 app.use(passport.initialize());
 
@@ -66,9 +75,8 @@ googleRouter.get('/google/callback', passport.authenticate('google', { failureRe
         expiryDate.setDate(expiryDate.getDate() + 30);
         res.cookie('token',token,{
           expires:expiryDate,
-          domain: `${frontend_url}`, // specify your frontend domain
           secure: true, // cookie is only sent over HTTPS
-          sameSite: 'Strict' // or 'Lax' or 'None'
+          sameSite: 'None' // or 'Lax' or 'None'
         })
       } else {
         console.log(error)
