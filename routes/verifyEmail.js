@@ -5,6 +5,9 @@ import crypto from 'crypto';
 import Reset from '../Model/resetModel.js';
 import sendMail from '../sendMail.js';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const verifyEmailRouter = express.Router();
 
@@ -42,6 +45,7 @@ verifyEmailRouter.post('/:id/:token',async(req,res)=>{
 
 verifyEmailRouter.post('/sendmailforresetpass',async(req,res)=>{
   const { email } = req.body;
+  const frontend_url = process.env.FRONTEND_URL;
   const user = await User.findOne({email:email});
   if(!user) res.send({status:false})
     const name = user.name;
@@ -57,7 +61,7 @@ verifyEmailRouter.post('/sendmailforresetpass',async(req,res)=>{
       const text = `
       <h1 style="color:black;">Hello, ${name}</h1>
       <h3 style="color:black;font-weight:400;">To reset your password, please click on the following link:</h3>
-      <h4 style="color:black;"><a href="http://localhost:5173/resetpassword/${id}/${token}">Reset Your Password</a></h4>
+      <h4 style="color:black;"><a href="${frontend_url}resetpassword/${id}/${token}">Reset Your Password</a></h4>
       <h3>Please note that this link is only valid for a limited time. If you facing the invalid error then you will need to submit another request.</h3>
       <p style="color:black;">From,<br>Engineer Link</p>
     `;
