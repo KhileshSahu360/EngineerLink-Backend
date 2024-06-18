@@ -1,43 +1,40 @@
 import express from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import cors from 'cors';
-import User from './Model/userModel.js'
-import bcrypt from 'bcrypt';
+import User from './Model/userModel.js';
 import { Generatejsonwebtoken } from './jsonwebtoken.js';
 import dotenv from 'dotenv';
-import cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 const frontend_url = process.env.FRONTEND_URL;
-const cors_frontend_url = process.env.FRONTEND_URL_CORS;
 
-const app = express();
-app.use(cors({
-  origin : '*',
-  credentials : true 
-}));
-app.use(express.json());
-app.use(cookieParser());
+const googleRouter = express.Router();
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', `${frontend_url}`); // Adjust as needed for development
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
-
-app.use(passport.initialize());
-
-
+googleRouter.use(cookieParser());
 
 passport.use(new GoogleStrategy({
   clientID: process.env.CLIENT_ID,
-  clientSecret:process.env.CLIENT_SECRET,
-  callbackURL:process.env.CALLBACK_URL 
-}, (accessToken, refreshToken, profile, cb) => {
-  return cb(null, profile);
+  clientSecret: process.env.CLIENT_SECRET,
+  callbackURL: process.env.CALLBACK_URL
+}, async (accessToken, refreshToken, profile, cb) => {
+  const { email, name } = profile._json;
+  try {
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = new User({ name, email, password: 'google', verified: true });
+      await user.save();
+    }
+
+    const token = Generatejsonwebtoken({ id: user._id, username: name });
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 30);
+
+    cb(null, { token, expiryDate });
+  } catch (error) {
+    cb(error);
+  }
 }));
 
 passport.serializeUser((user, cb) => {
@@ -48,50 +45,20 @@ passport.deserializeUser((obj, cb) => {
   cb(null, obj);
 });
 
-const googleRouter = express.Router();
-
-googleRouter.get('/google', passport.authenticate("google", { scope: ["profile", "email"] }));
+googleRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 googleRouter.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }),
-  async(req, res) => {  
-    const { email, name } = req.user._json;
-    try {
-      let findRes = await User.findOne({ email: email });
-    
-      if (!findRes) {
-        const newUser = new User({ name, email, password: 'google', verified: true });
-        await newUser.save();
-        findRes = newUser;
-      }
-    
-      if (findRes) {
-        const userId = findRes._id;
-        const payLoad = {
-          id: userId,
-          username: name
-        }
-        const token = Generatejsonwebtoken(payLoad);
-        const expiryDate = new Date();
-        expiryDate.setDate(expiryDate.getDate() + 30);
-        res.cookie('token',token,{
-          expires:expiryDate,
-          secure: true, // cookie is only sent over HTTPS
-          sameSite: 'None' // or 'Lax' or 'None'
-        })
-      } else {
-        console.log(error)
-        return res.redirect(`${frontend_url}servererror`);
-      }
-    
-    } catch (error) {
-      console.log(error)
-      return res.redirect(`${frontend_url}servererror`);
-    }
-    
-    res.redirect('/home');
+  (req, res) => {
+    const { token, expiryDate } = req.user;
+
+    res.cookie('token', token, {
+      expires: expiryDate,
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None'
+    });
+
+    res.redirect(`${frontend_url}/home`);
   });
-
-
-
 
 export default googleRouter;
