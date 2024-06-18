@@ -58,7 +58,7 @@ googleRouter.get('/google/callback', passport.authenticate('google', { failureRe
       sameSite: 'None'
     });
 
-    res.redirect(`${frontend_url}/home`);
+    res.redirect(`${frontend_url}home`);
   });
 
 export default googleRouter;
