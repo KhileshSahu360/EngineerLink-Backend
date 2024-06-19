@@ -1,9 +1,10 @@
-import { createServer } from 'http';
+  import { createServer } from 'http';
 import express from 'express';
 import { Server } from 'socket.io';
 import Conversation from './Model/conversationModel.js'
 import mongoose from 'mongoose';
 import Message from './Model/messageModel.js';
+import CollabCodeHandler from './collabcode.js'
 
 const app = express();
 
@@ -13,6 +14,9 @@ const io = new Server(server, {
     origin:'*'
   }
 })
+
+const collabCodeNamespace = io.of('/collabcode');
+CollabCodeHandler(collabCodeNamespace);
 
 const onlineUsers = new Set();
 
