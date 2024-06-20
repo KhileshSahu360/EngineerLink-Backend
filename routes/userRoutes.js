@@ -26,7 +26,7 @@ router.get('/getalluser/:localUserId',async(req,res)=>{
   try{
     const rslt = await User.findOne({_id:localUserId})
     if(rslt){
-      const result = await User.find({_id:{$ne:localUserId}})
+      const result = await User.find({_id:{$ne:localUserId}, verified: true})
       if(result){
         res.send({users:result});
       }else{

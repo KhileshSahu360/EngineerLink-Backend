@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-import '../dbCongig.js';
 
 const messageSchema = new mongoose.Schema({
 

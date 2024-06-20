@@ -5,6 +5,7 @@ import Conversation from './Model/conversationModel.js'
 import mongoose from 'mongoose';
 import Message from './Model/messageModel.js';
 import CollabCodeHandler from './collabcode.js'
+// import VideoCallHandler from './videocall.js';
 
 const app = express();
 
@@ -17,6 +18,8 @@ const io = new Server(server, {
 
 const collabCodeNamespace = io.of('/collabcode');
 CollabCodeHandler(collabCodeNamespace);
+// const videocallNamespace = io.of('/videocall');
+// VideoCallHandler(videocallNamespace);
 
 const onlineUsers = new Set();
 

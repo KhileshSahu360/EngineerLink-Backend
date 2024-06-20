@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   password: {type: String, required: true, unique: false},
   verified: {type: Boolean, default:false},
   about: {type: String, default:''},
-  heading: {type: String, default:'Edit your subheading'},
+  heading: {type: String, default:''},
   location: {type: String, default:'Choose location'},
   avatar:{type:String, default:'https://res.cloudinary.com/dgdnyeo0y/image/upload/v1716220165/profile_images/v1yuwb17nsmrrs1wx7fd.jpg'},
   education:{
@@ -39,7 +39,9 @@ const userSchema = new mongoose.Schema({
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users', default: [] }], 
   following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users', default: [] }], 
   password : {type: String, required: true, unique: false},
-  verified: {type: Boolean, default:false}
+  verified: {type: Boolean, default:false},
+  notification: [{ type: mongoose.Schema.Types.ObjectId, ref: 'notifications', default: [] }], 
+  
 })
 
 const User = mongoose.model('users',userSchema);
