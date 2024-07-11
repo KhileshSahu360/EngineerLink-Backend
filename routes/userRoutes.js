@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/getuserdata/:userId',async(req,res)=>{
   const userId = req.params.userId;
   try{
-    const user = await User.findOne({_id:userId}).populate('followers').populate('following').populate({
+    const user = await User.findOne({_id:userId}).select('-password').populate('followers').populate('following').populate({
       path: 'post.postId', // Populate the postId field in the post array
       model: 'posts' // Specify the model to populate from
     })

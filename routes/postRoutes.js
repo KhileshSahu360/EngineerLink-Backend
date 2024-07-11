@@ -60,7 +60,7 @@ postRouter.get('/getpost/:postId/:localUserId',async(req,res)=>{
 })
 
 postRouter.post('/getallpost', async (req, res) => {
-  const limit = parseInt(req.body.limit) || 1;
+  const limit = parseInt(req.body.limit) || 5;
   const excludeIds = req.body.excludeIds || [];
 
   try {
