@@ -70,7 +70,6 @@ postRouter.post('/getallpost', async (req, res) => {
     const excludeObjectIds = excludeIds.map(id => new mongoose.Types.ObjectId(id));
 
   const posts = await Post.find({ _id: { $nin: excludeObjectIds } })
-  .limit(sampleSize)
   .populate('author') // Populate author of the post
   .populate({
     path: 'postcomment.commentId',
